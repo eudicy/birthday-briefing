@@ -1,6 +1,6 @@
 # Test Strategy — Landing Page
 
-Scope: current phase is the landing page only (email waitlist signup for the app announcement). See [`CLAUDE.md`](../../../CLAUDE.md#scope). App test strategy (Flutter) is a separate, later effort.
+Scope: current phase is the landing page only (email waitlist signup for the app announcement). See [`AGENTS.md`](../../../AGENTS.md#scope). App test strategy (Flutter) is a separate, later effort.
 
 Surface: 1 route, 3 server components (`HeroSection`, `FeatureList`, `Footer`), 1 client component with `useActionState` (`SignupForm`), 1 server action calling Brevo (`app/actions/subscribe.ts`). Test stack: `vitest` + `@testing-library/react` + `jsdom` (unit), `playwright` (E2E), plus ESLint.
 
