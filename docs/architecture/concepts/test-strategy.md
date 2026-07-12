@@ -34,9 +34,11 @@ Stack: `playwright` (Next.js's recommended choice, better fit than Cypress for A
 
 Two GitHub Actions jobs, triggered on push/PR against `main`:
 - `unit`: `lint` + `typecheck` (`tsc --noEmit`) + `vitest run` + `next build`
-- `e2e`: `playwright install --with-deps chromium` + `playwright test` (against a production `next build && next start` server, not `next dev`)
+- `e2e`: `playwright install --with-deps chromium` + `playwright test` (against `next dev`)
 
-Known gap: unit tests fully mock `@getbrevo/brevo`, and E2E forces the dry-run path (no `BREVO_API_KEY` set) — the real Brevo call shape is never exercised end-to-end. Accepted for now since there's no way to hit the real API with credentials in CI.
+Known gaps, accepted for now:
+- Unit tests fully mock `@getbrevo/brevo`, and E2E forces the dry-run path (no `BREVO_API_KEY` set) — the real Brevo call shape is never exercised end-to-end. There's no way to hit the real API with credentials in CI.
+- E2E runs against `next dev`, not a production build. `subscribe.ts` branches its dry-run behavior on `NODE_ENV !== "production"`, and `next start` hard-forces `NODE_ENV=production` with no override — so testing E2E against a real production build would always hit the "signup unavailable" error path instead of dry-run, since no real Brevo keys exist in CI. Making E2E exercise a production build meaningfully needs a dedicated test-mode bypass in `subscribe.ts`, which is out of scope for this test-infra setup.
 
 ## Out of scope
 

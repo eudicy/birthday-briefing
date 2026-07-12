@@ -9,10 +9,10 @@ export default defineConfig({
     baseURL: "http://localhost:3000",
   },
   webServer: {
-    command: process.env.CI ? "npm run build && npm start" : "npm run dev",
+    command: "npm run dev",
     url: "http://localhost:3000",
     reuseExistingServer: !process.env.CI,
-    timeout: 180_000,
+    timeout: 120_000,
     env: {
       BREVO_API_KEY: "",
       BREVO_LIST_ID: "",
