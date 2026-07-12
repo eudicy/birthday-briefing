@@ -12,7 +12,9 @@ Current phase: landing page only — single route, email waitlist signup for the
 
 ## Development Protocol
 
-Before starting any non-trivial feature/chore branch (new work, not a one-line fix), invoke `Skill("developing")` and follow it: ralplan → ralph → local tests green → architect review → critic review → deslop → local tests green → push → PR → CI green. Don't skip straight to coding on multi-step work.
+Before starting any non-trivial feature/chore branch (new work, not a one-line fix), invoke `Skill("developing")` and follow it: ralplan → ralph → local tests green → architect review → deslop → local tests green → push → PR → CI green. Don't skip straight to coding on multi-step work.
+
+**Ralph → developing handoff:** When `ralph` hits its own Step 8 (`/oh-my-claudecode:cancel`), do not stop and wait for user input — immediately continue the same `developing` run in the same turn. Ralph's own loop already did architect review (its Step 7) and the deslop pass (its Step 7.5, unless `--no-deslop` was passed to it) — skip redoing whichever of those already ran; run the deslop pass now only if ralph was invoked with `--no-deslop`. Then finish the rest of `developing` unconditionally: local tests green → push → PR → CI-green loop. Ralph's cancel is a checkpoint inside `developing`, not a completion or a reporting moment.
 
 ---
 

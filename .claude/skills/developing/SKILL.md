@@ -1,6 +1,6 @@
 ---
 name: developing
-description: "Standard dev session protocol for this repo: ralplan, Ralph, architect+critic review, deslop, push, PR, CI-green loop. Use for any non-trivial feature/chore branch in birthday-briefing."
+description: "Standard dev session protocol for this repo: ralplan, Ralph, architect review, deslop, push, PR, CI-green loop. Use for any non-trivial feature/chore branch in birthday-briefing."
 ---
 
 # Developing (session protocol)
@@ -13,12 +13,11 @@ Fixed sequence for any non-trivial branch in this repo. Don't skip steps or repo
 2. **`ralph`** — execute against the plan, story by story, verifying each acceptance criterion with fresh evidence before marking it done.
 3. **Local tests green** — `npm run lint && npm run typecheck && npm run test` (and `npm run build`). Fix before moving on.
 4. **Architect review** — `Task(subagent_type="oh-my-claudecode:architect", ...)` against `git diff main...<branch>`. Read-only, verdict APPROVED/REJECTED with concrete file:line findings.
-5. **Critic review** — `Task(subagent_type="oh-my-claudecode:critic", ...)` on the same diff, independent of architect (don't feed it the architect's verdict as ground truth — let it re-derive). Checks for "is this optimal", not just "is this correct".
-6. **Deslop pass** — `Skill("ai-slop-cleaner")` in standard mode, scoped to files changed in this session only. Fix architect/critic findings in this pass too if they're cleanup-shaped; fix logic findings directly.
-7. **Local tests green again** — re-run step 3's full command after the fixes/deslop. This is the actual regression gate, not step 3.
-8. **Push** — `git push -u origin <branch>`.
-9. **PR** — `gh pr create` with a real summary + test plan, not a placeholder.
-10. **CI green loop** — poll `gh pr checks <n>` until no `pending`. On failure: `gh run view <run-id> --job <job-id> --log-failed`, fix, commit, push, repeat. Don't hand back to the user until every check is `pass`.
+5. **Deslop pass** — `Skill("ai-slop-cleaner")` in standard mode, scoped to files changed in this session only. Fix architect findings in this pass too if they're cleanup-shaped; fix logic findings directly.
+6. **Local tests green again** — re-run step 3's full command after the fixes/deslop. This is the actual regression gate, not step 3.
+7. **Push** — `git push -u origin <branch>`.
+8. **PR** — `gh pr create` with a real summary + test plan, not a placeholder.
+9. **CI green loop** — poll `gh pr checks <n>` until no `pending`. On failure: `gh run view <run-id> --job <job-id> --log-failed`, fix, commit, push, repeat. Don't hand back to the user until every check is `pass`.
 
 ## Known gotchas (hit in PR #2, chore/testing-setup)
 
