@@ -16,8 +16,8 @@ A fresh local machine or minimal container doesn't have that head start, hence t
 
 Playwright's own dependency table (`playwright-core/src/server/registry/nativeDeps.ts`) splits system packages into:
 
-- **`tools`** — `xvfb`, `xfonts-*`, `xauth`, font packages. Applied unconditionally regardless of which browser you target.
-- **`chromium`** (browser-specific) — ~26 plain shared libraries: `libnspr4`, `libnss3`, `libatk1.0-0`, `libatk-bridge2.0-0`, `libcups2`, `libdrm2`, `libgbm1`, `libglib2.0-0`, `libgtk-3-0`, `libpango-1.0-0`, `libx11-6`, `libxcomposite1`, `libxdamage1`, `libxfixes3`, `libxrandr2`, `libxshmfence1`, etc. No X server package in this list.
+- **`tools`** — `xvfb`, `xfonts-*`, `xauth`, most font packages. Applied unconditionally regardless of which browser you target.
+- **`chromium`** (browser-specific) — ~26 plain shared libraries: `libnspr4`, `libnss3`, `libatk1.0-0`, `libatk-bridge2.0-0`, `libcups2`, `libdrm2`, `libgbm1`, `libglib2.0-0`, `libgtk-3-0`, `libpango-1.0-0`, `libx11-6`, `libxcomposite1`, `libxdamage1`, `libxfixes3`, `libxrandr2`, `libxshmfence1`, etc. No X server package in this list — `fonts-liberation` is the one font package that lives here instead of in `tools`, since Chromium itself requires it for text rendering.
 
 `npx playwright install --with-deps chromium` installs both buckets together — that's where `xvfb`/`xserver-common`/`x11-xkb-utils` come from in the dry-run output, not from Chromium's actual runtime linkage.
 
@@ -27,7 +27,7 @@ Confirmed by the Playwright team directly: "you don't need [Xvfb] when running p
 
 ## Recommendation
 
-Skip `--with-deps` (it drags in the full `tools` bucket: Xvfb, X server, X fonts). Install only the Chromium runtime shared libraries directly via apt. On this machine (Ubuntu 24.04 / noble, `t64`-suffixed packages):
+Skip `--with-deps` (it drags in the full `tools` bucket: Xvfb, X server, X fonts). Install only the Chromium runtime shared libraries directly via apt (plus `fonts-liberation`, the one font package Chromium's own bucket requires). On this machine (Ubuntu 24.04 / noble, `t64`-suffixed packages):
 
 ```bash
 sudo apt-get update
@@ -43,7 +43,7 @@ No X server, no display manager, no `DISPLAY` env var needed — these are clien
 
 ## Confirmed
 
-Verified on this machine (headless dev VM, Ubuntu 24.04, no `DISPLAY`): after installing the trimmed shared-library list above (`libnspr4`, `libnss3`, `libgtk-3-0t64`, etc. — already present, no X server package) and running `npx playwright install chromium`, `npm run test:e2e` passes:
+Verified on this machine (headless dev VM, Ubuntu 24.04, no `DISPLAY`): running `npx playwright install chromium` then `npm run test:e2e` passes:
 
 ```
 Running 2 tests using 1 worker
@@ -52,7 +52,7 @@ Running 2 tests using 1 worker
   2 passed (15.4s)
 ```
 
-No Xvfb, no display manager, no `DISPLAY` env var set. Confirms Finding 4: headless Chromium runs fine on a headless VM with only the browser's shared-library deps installed.
+No Xvfb, no display manager, no `DISPLAY` env var set. Confirms Finding 4: headless Chromium runs fine on a headless VM with no X server. Note: on this machine the trimmed shared-library list (`libnspr4`, `libnss3`, `libgtk-3-0t64`, etc.) was already present before this run, so this doesn't independently verify the apt list in the Recommendation above is complete on a bare machine — that remains untested.
 
 ## Caveats
 

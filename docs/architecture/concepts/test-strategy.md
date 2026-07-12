@@ -2,7 +2,7 @@
 
 Scope: current phase is the landing page only (email waitlist signup for the app announcement). See [`CLAUDE.md`](../../../CLAUDE.md#scope). App test strategy (Flutter) is a separate, later effort.
 
-Surface: 1 route, 3 server components (`HeroSection`, `FeatureList`, `Footer`), 1 client component with `useActionState` (`SignupForm`), 1 server action calling Brevo (`app/actions/subscribe.ts`). No test framework installed yet — only ESLint.
+Surface: 1 route, 3 server components (`HeroSection`, `FeatureList`, `Footer`), 1 client component with `useActionState` (`SignupForm`), 1 server action calling Brevo (`app/actions/subscribe.ts`). Test stack: `vitest` + `@testing-library/react` + `jsdom` (unit), `playwright` (E2E), plus ESLint.
 
 ## Unit / Component
 
@@ -32,21 +32,12 @@ Stack: `playwright` (Next.js's recommended choice, better fit than Cypress for A
 
 ## Running E2E locally on a headless VM
 
-No X server / Xvfb needed — headless Chromium doesn't require one (details: [`executing-playwright-locally.md`](executing-playwright-locally.md)).
+No X server / Xvfb needed — headless Chromium doesn't require one. Install the apt package list from [`executing-playwright-locally.md`](executing-playwright-locally.md#recommendation) (kept there as the single source of truth, since it needs revisiting on `@playwright/test` upgrades), then:
 
 ```bash
-sudo apt-get update
-sudo apt-get install -y \
-  fonts-liberation libasound2t64 libatk-bridge2.0-0t64 libatk1.0-0t64 \
-  libatspi2.0-0t64 libcairo2 libcups2t64 libdbus-1-3 libdrm2 libegl1 \
-  libgbm1 libglib2.0-0t64 libgtk-3-0t64 libnspr4 libnss3 libpango-1.0-0 \
-  libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxdamage1 libxext6 \
-  libxfixes3 libxrandr2 libxshmfence1
 npx playwright install chromium
 npm run test:e2e
 ```
-
-Skip `--with-deps` — pulls in unneeded Xvfb/X11/font packages. Package names above are for Ubuntu 24.04 (`t64`-suffixed); other distros/versions may differ.
 
 ## CI
 
