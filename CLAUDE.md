@@ -4,6 +4,12 @@ Authoritative tech stack reference for all AI agents on this project.
 
 ---
 
+## Scope
+
+Current phase: landing page only — single route, email waitlist signup for the upcoming app announcement. No Flutter app code lives in this repo. App development (iOS/Android/Web) starts after this landing page ships and is live on Vercel. Don't scaffold app-related code here unless explicitly asked.
+
+---
+
 ## Tech Stack
 
 | Framework / Tool | Context7 Library ID          |
