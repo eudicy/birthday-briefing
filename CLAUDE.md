@@ -10,6 +10,12 @@ Current phase: landing page only — single route, email waitlist signup for the
 
 ---
 
+## Development Protocol
+
+Before starting any non-trivial feature/chore branch (new work, not a one-line fix), invoke `Skill("developing")` and follow it: ralplan → ralph → local tests green → architect review → critic review → deslop → local tests green → push → PR → CI green. Don't skip straight to coding on multi-step work.
+
+---
+
 ## Tech Stack
 
 | Framework / Tool | Context7 Library ID          |
