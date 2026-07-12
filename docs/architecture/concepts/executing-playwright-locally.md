@@ -41,6 +41,19 @@ sudo apt-get install -y \
 
 No X server, no display manager, no `DISPLAY` env var needed — these are client-side shared libraries only, safe to install on a headless dev box or server. `npx playwright install chromium` (without `--with-deps`) to fetch/verify the browser binary, then `npm run test:e2e`.
 
+## Confirmed
+
+Verified on this machine (headless dev VM, Ubuntu 24.04, no `DISPLAY`): after installing the trimmed shared-library list above (`libnspr4`, `libnss3`, `libgtk-3-0t64`, etc. — already present, no X server package) and running `npx playwright install chromium`, `npm run test:e2e` passes:
+
+```
+Running 2 tests using 1 worker
+  ✓  1 [chromium] › e2e/signup.spec.ts:3:5 › visitor can join the waitlist (1.7s)
+  ✓  2 [chromium] › e2e/signup.spec.ts:12:5 › invalid email is blocked client-side and never reaches the success message (1.0s)
+  2 passed (15.4s)
+```
+
+No Xvfb, no display manager, no `DISPLAY` env var set. Confirms Finding 4: headless Chromium runs fine on a headless VM with only the browser's shared-library deps installed.
+
 ## Caveats
 
 - Not byte-for-byte CI parity: CI still runs full `--with-deps`, which is more robust against Playwright bumping its required-package list on a browser update. The trimmed list above needs revisiting if `@playwright/test` is upgraded and a future run reports a new missing `.so`.

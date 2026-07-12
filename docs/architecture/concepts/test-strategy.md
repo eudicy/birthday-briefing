@@ -30,6 +30,24 @@ Stack: `playwright` (Next.js's recommended choice, better fit than Cypress for A
 - E2E env: do not set `BREVO_API_KEY` → exercises the dry-run path, no real Brevo call needed
 - optional: CTA anchor scroll (`#signup`), responsive check (mobile viewport)
 
+## Running E2E locally on a headless VM
+
+No X server / Xvfb needed — headless Chromium doesn't require one (details: [`executing-playwright-locally.md`](executing-playwright-locally.md)).
+
+```bash
+sudo apt-get update
+sudo apt-get install -y \
+  fonts-liberation libasound2t64 libatk-bridge2.0-0t64 libatk1.0-0t64 \
+  libatspi2.0-0t64 libcairo2 libcups2t64 libdbus-1-3 libdrm2 libegl1 \
+  libgbm1 libglib2.0-0t64 libgtk-3-0t64 libnspr4 libnss3 libpango-1.0-0 \
+  libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxdamage1 libxext6 \
+  libxfixes3 libxrandr2 libxshmfence1
+npx playwright install chromium
+npm run test:e2e
+```
+
+Skip `--with-deps` — pulls in unneeded Xvfb/X11/font packages. Package names above are for Ubuntu 24.04 (`t64`-suffixed); other distros/versions may differ.
+
 ## CI
 
 Two GitHub Actions jobs, triggered on push/PR against `main`:
