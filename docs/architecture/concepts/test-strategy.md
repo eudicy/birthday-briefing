@@ -1,8 +1,8 @@
 # Test Strategy — Landing Page
 
-Scope: current phase is the landing page only (email waitlist signup for the app announcement). See [`CLAUDE.md`](../../../CLAUDE.md#scope). App test strategy (Flutter) is a separate, later effort.
+Scope: current phase is the landing page only (email waitlist signup for the app announcement). See [`AGENTS.md`](../../../AGENTS.md#scope). App test strategy (Flutter) is a separate, later effort.
 
-Surface: 1 route, 3 server components (`HeroSection`, `FeatureList`, `Footer`), 1 client component with `useActionState` (`SignupForm`), 1 server action calling Brevo (`app/actions/subscribe.ts`). No test framework installed yet — only ESLint.
+Surface: 1 route, 3 server components (`HeroSection`, `FeatureList`, `Footer`), 1 client component with `useActionState` (`SignupForm`), 1 server action calling Brevo (`app/actions/subscribe.ts`). Test stack: `vitest` + `@testing-library/react` + `jsdom` (unit), `playwright` (E2E), plus ESLint.
 
 ## Unit / Component
 
@@ -29,6 +29,15 @@ Stack: `playwright` (Next.js's recommended choice, better fit than Cypress for A
 - invalid email → client-side validation blocks submit (`type="email"`, `required`)
 - E2E env: do not set `BREVO_API_KEY` → exercises the dry-run path, no real Brevo call needed
 - optional: CTA anchor scroll (`#signup`), responsive check (mobile viewport)
+
+## Running E2E locally on a headless VM
+
+No X server / Xvfb needed — headless Chromium doesn't require one. Install the apt package list from [`executing-playwright-locally.md`](executing-playwright-locally.md#recommendation) (kept there as the single source of truth, since it needs revisiting on `@playwright/test` upgrades), then:
+
+```bash
+npx playwright install chromium
+npm run test:e2e
+```
 
 ## CI
 
