@@ -17,5 +17,6 @@ test("invalid email is blocked client-side and never reaches the success message
   await page.getByLabel("Email").fill("not-an-email");
   await page.getByRole("button", { name: /join waitlist/i }).click();
 
+  await expect(page.locator("input:invalid")).toHaveCount(1);
   await expect(page.getByRole("status")).toHaveCount(0);
 });

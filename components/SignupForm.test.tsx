@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { cleanup, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 const { subscribeMock } = vi.hoisted(() => ({ subscribeMock: vi.fn() }));
@@ -11,7 +11,6 @@ vi.mock("@/app/actions/subscribe", () => ({
 import { SignupForm } from "./SignupForm";
 
 afterEach(() => {
-  cleanup();
   subscribeMock.mockReset();
 });
 
@@ -50,10 +49,12 @@ describe("SignupForm", () => {
   });
 
   it("shows a pending state while the action is in flight", async () => {
-    const { promise, resolve } = Promise.withResolvers<{
-      success: boolean;
-      message: string;
-    }>();
+    let resolve!: (value: { success: boolean; message: string }) => void;
+    const promise = new Promise<{ success: boolean; message: string }>(
+      (r) => {
+        resolve = r;
+      },
+    );
     subscribeMock.mockReturnValue(promise);
     const user = userEvent.setup();
     render(<SignupForm />);

@@ -32,7 +32,11 @@ Stack: `playwright` (Next.js's recommended choice, better fit than Cypress for A
 
 ## CI
 
-`lint` + `typecheck` (`tsc --noEmit`) + `vitest run` + `next build` + `playwright test` in GitHub Actions, triggered on PRs against `feat/landing-page` / `main`.
+Two GitHub Actions jobs, triggered on push/PR against `main`:
+- `unit`: `lint` + `typecheck` (`tsc --noEmit`) + `vitest run` + `next build`
+- `e2e`: `playwright install --with-deps chromium` + `playwright test` (against a production `next build && next start` server, not `next dev`)
+
+Known gap: unit tests fully mock `@getbrevo/brevo`, and E2E forces the dry-run path (no `BREVO_API_KEY` set) — the real Brevo call shape is never exercised end-to-end. Accepted for now since there's no way to hit the real API with credentials in CI.
 
 ## Out of scope
 
