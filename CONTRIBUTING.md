@@ -9,7 +9,7 @@
 ## Brevo account setup
 
 1. Sign up at [brevo.com](https://www.brevo.com/) and log in.
-2. Create a contact list under **Contacts > Lists**, note its list ID (shown in the list's URL/settings).
+2. Create a contact list under **Contacts > Lists**, note its list ID (shown in the list's URL/settings). List ID is a long integer; the corresponding `BREVO_LIST_ID` environment variable is set as a string but parsed as a number.
 3. Generate an API key under **SMTP & API > API Keys**.
 
 ## `.env.local` setup
