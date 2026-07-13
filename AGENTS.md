@@ -38,6 +38,7 @@ Before starting any non-trivial feature/chore branch (new work, not a one-line f
 | Tailwind CSS     | tailwindlabs/tailwindcss.com |
 | Magic UI         | websites/magicui_design      |
 | Brevo            | getbrevo/brevo-node          |
+| next-themes      | pacocoursey/next-themes      |
 | Vercel           | vercel/vercel                |
 
 ---
@@ -56,6 +57,8 @@ components/
   SignupForm.tsx
   FeatureList.tsx
   Footer.tsx
+  ThemeProvider.tsx
+  ThemeToggle.tsx
 public/               # static assets
 .env.local            # BREVO_API_KEY, BREVO_LIST_ID (never commit)
 .env.local.example    # template for .env.local, committed
@@ -103,8 +106,10 @@ Only build what this landing page needs:
 | `FeatureList`    | Server        | Solution section: 3 key benefits (icon + text) |
 | `SignupForm`     | Client        | Email input + submit button, calls server action |
 | `Footer`         | Server        | Copyright, minimal links                     |
+| `ThemeProvider`  | Client        | Wraps `next-themes`, applies `.dark` class to `<html>` |
+| `ThemeToggle`    | Client        | Light/Dark/System theme switcher, top-right of layout |
 
-Use Magic UI's `AnimatedGradientText` or `BlurFade` for the hero headline. Use shadcn/ui `Input`, `Button`, and `Label` inside `SignupForm`. No other UI libraries.
+Use Magic UI's `AnimatedGradientText` or `BlurFade` for the hero headline. Use shadcn/ui `Input`, `Button`, `Label`, and `DropdownMenu` inside client components. `next-themes` handles theme persistence/system detection; no other theming libraries.
 
 ---
 
