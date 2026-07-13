@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "embedded",
+  "dolt_database": "birthday_briefing",
+  "project_id": "1506a48c-737f-466a-bee5-d07e6b6b618c"
+}
