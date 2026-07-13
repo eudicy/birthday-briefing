@@ -3,26 +3,29 @@ const features = [
     icon: "🔄",
     title: "Automatic consolidation",
     description:
-      "Birthdays scattered across contacts, calendars, and social apps land in one place — no manual syncing.",
+      "Birthday Briefing automatically consolidates all birthday information into one place — no manual synchronization.",
   },
   {
     icon: "⏰",
     title: "Timely reminders",
     description:
-      "Get nudged with enough lead time to actually plan something, not a same-day scramble.",
+      "Sends timely reminders with enough lead time to act — the right nudge at the right time.",
   },
   {
     icon: "🎯",
-    title: "One place for everyone",
+    title: "No missed moments",
     description:
-      "Friends, family, and partner — every important date, tracked without the manual work.",
+      "Friends, family, and partner — every important date tracked, so nothing slips through.",
   },
 ];
 
 export function FeatureList() {
   return (
     <section className="max-w-4xl mx-auto px-4 py-16 sm:py-24">
-      <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
+      <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl text-center">
+        Birthday Briefing has you covered
+      </h2>
+      <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-3">
         {features.map((feature) => (
           <div key={feature.title} className="text-center sm:text-left">
             <div className="text-3xl">{feature.icon}</div>

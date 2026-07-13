@@ -10,6 +10,10 @@ Authoritative tech stack reference for all AI agents on this project.
 
 ---
 
+## Product Vision
+
+See [`README.md`](README.md) for the product description, target audience, and problem/solution framing that all landing page copy is based on.
+
 ## Scope
 
 Current phase: landing page only — single route, email waitlist signup for the upcoming app announcement. No Flutter app code lives in this repo. App development (iOS/Android/Web) starts after this landing page ships and is live on Vercel. Don't scaffold app-related code here unless explicitly asked.
@@ -48,11 +52,13 @@ app/
     subscribe.ts      # server action: submit email to Brevo
 components/
   HeroSection.tsx
+  ProblemSection.tsx
   SignupForm.tsx
   FeatureList.tsx
   Footer.tsx
 public/               # static assets
 .env.local            # BREVO_API_KEY, BREVO_LIST_ID (never commit)
+.env.local.example    # template for .env.local, committed
 ```
 
 Keep all components in `components/`. Server actions live in `app/actions/`. No `pages/` directory — App Router only.
@@ -93,8 +99,9 @@ Only build what this landing page needs:
 | Component        | Type          | Purpose                                      |
 |------------------|---------------|----------------------------------------------|
 | `HeroSection`    | Server        | Headline, subheadline, CTA scroll anchor     |
+| `ProblemSection` | Server        | Problem & audience framing, based on README.md |
+| `FeatureList`    | Server        | Solution section: 3 key benefits (icon + text) |
 | `SignupForm`     | Client        | Email input + submit button, calls server action |
-| `FeatureList`    | Server        | 3 key benefits (icon + text)                 |
 | `Footer`         | Server        | Copyright, minimal links                     |
 
 Use Magic UI's `AnimatedGradientText` or `BlurFade` for the hero headline. Use shadcn/ui `Input`, `Button`, and `Label` inside `SignupForm`. No other UI libraries.

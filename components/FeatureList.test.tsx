@@ -13,7 +13,7 @@ describe("FeatureList", () => {
       screen.getByRole("heading", { name: /timely reminders/i }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: /one place for everyone/i }),
+      screen.getByRole("heading", { name: /no missed moments/i }),
     ).toBeInTheDocument();
   });
 });
