@@ -16,7 +16,7 @@ See [`README.md`](README.md) for the product description, target audience, and p
 
 ## Scope
 
-Current phase: landing page only — single route, email waitlist signup for the upcoming app announcement. No Flutter app code lives in this repo. App development (iOS/Android/Web) starts after this landing page ships and is live on Vercel. Don't scaffold app-related code here unless explicitly asked.
+Current phase: landing page plus a legally-required `/imprint` route — two routes total: email waitlist signup for the upcoming app announcement, and the Impressum. No Flutter app code lives in this repo. App development (iOS/Android/Web) starts after this landing page ships and is live on Vercel. Don't scaffold app-related code here unless explicitly asked.
 
 ---
 
@@ -48,7 +48,9 @@ Before starting any non-trivial feature/chore branch (new work, not a one-line f
 ```
 app/
   layout.tsx          # root layout, fonts, metadata
-  page.tsx            # landing page (single route)
+  page.tsx            # landing page
+  imprint/
+    page.tsx          # /imprint route — legally required Impressum
   actions/
     subscribe.ts      # server action: submit email to Brevo
 components/
@@ -70,7 +72,7 @@ Keep all components in `components/`. Server actions live in `app/actions/`. No 
 
 ## Routing (App Router)
 
-This is a single-page marketing site. Use one route: `app/page.tsx`. The root layout (`app/layout.tsx`) sets global metadata, fonts (next/font), and wraps children. All page-level components are React Server Components by default. Only add `"use client"` to components that need interactivity (e.g. `SignupForm`). No dynamic routes needed for this increment.
+This is primarily a single-page marketing site with one additional static route for legal compliance: `app/page.tsx` (landing page) and `app/imprint/page.tsx` (Impressum). The root layout (`app/layout.tsx`) sets global metadata, fonts (next/font), and wraps children. Each route duplicates its own page shell (`<main>` + `<Footer/>`) rather than hoisting it into the layout — see the imprint page's ADR for the rule-of-three follow-up. All page-level components are React Server Components by default. Only add `"use client"` to components that need interactivity (e.g. `SignupForm`). No dynamic routes needed for this increment.
 
 ---
 
@@ -105,7 +107,7 @@ Only build what this landing page needs:
 | `ProblemSection` | Server        | Problem & audience framing, based on README.md |
 | `FeatureList`    | Server        | Solution section: 3 key benefits (icon + text) |
 | `SignupForm`     | Client        | Email input + submit button, calls server action |
-| `Footer`         | Server        | Copyright, minimal links                     |
+| `Footer`         | Server        | Copyright, links to Contact and `/imprint`   |
 | `ThemeProvider`  | Client        | Wraps `next-themes`, applies `.dark` class to `<html>` |
 | `ThemeToggle`    | Client        | Light/Dark/System theme switcher, top-right of layout |
 

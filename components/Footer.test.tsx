@@ -12,5 +12,8 @@ describe("Footer", () => {
 
     const contact = screen.getByRole("link", { name: /contact/i });
     expect(contact).toHaveAttribute("href", "mailto:hello@birthdaybriefing.app");
+
+    const imprint = screen.getByRole("link", { name: /imprint/i });
+    expect(imprint).toHaveAttribute("href", "/imprint");
   });
 });
