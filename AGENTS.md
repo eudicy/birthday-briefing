@@ -1,12 +1,220 @@
-<!-- BEGIN:nextjs-agent-rules -->
-# This is NOT the Next.js you know
-
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
-<!-- END:nextjs-agent-rules -->
-
 # AGENTS.md — Birthday Briefing
 
 Authoritative tech stack reference for all AI agents on this project.
+
+<!-- markdownlint-disable MD013 MD022 MD025 MD031 MD032 MD034 -->
+<!-- BEGIN BEADS INTEGRATION v:1 profile:minimal hash:970c3bf2 -->
+## Beads Issue Tracker
+
+This project uses **bd (beads)** for issue tracking. Run `bd prime` to see full workflow context and commands.
+
+### Quick Reference
+
+```bash
+bd ready              # Find available work
+bd show <id>          # View issue details
+bd update <id> --claim  # Claim work
+bd close <id>         # Complete work
+```
+
+### Rules
+
+- Use `bd` for ALL task tracking — do NOT use TodoWrite, TaskCreate, or markdown TODO lists
+- Run `bd prime` for detailed command reference and session close protocol
+- Use `bd remember` for persistent knowledge — do NOT use MEMORY.md files
+
+**Architecture in one line:** issues live in a local Dolt DB; sync uses `refs/dolt/data` on your git remote; `.beads/issues.jsonl` is a passive export. See https://github.com/gastownhall/beads/blob/main/docs/SYNC_CONCEPTS.md for details and anti-patterns.
+
+## Agent Context Profiles
+
+The managed Beads block is task-tracking guidance, not permission to override repository, user, or orchestrator instructions.
+
+- **Conservative (default)**: Use `bd` for task tracking. Do not run git commits, git pushes, or Dolt remote sync unless explicitly asked. At handoff, report changed files, validation, and suggested next commands.
+- **Minimal**: Keep tool instruction files as pointers to `bd prime`; use the same conservative git policy unless active instructions say otherwise.
+- **Team-maintainer**: Only when the repository explicitly opts in, agents may close beads, run quality gates, commit, and push as part of session close. A current "do not commit" or "do not push" instruction still wins.
+
+## Session Completion
+
+This protocol applies when ending a Beads implementation workflow. It is subordinate to explicit user, repository, and orchestrator instructions.
+
+1. **File issues for remaining work** - Create beads for anything that needs follow-up
+2. **Run quality gates** (if code changed) - Tests, linters, builds
+3. **Update issue status** - Close finished work, update in-progress items
+4. **Handle git/sync by active profile**:
+   ```bash
+   # Conservative/minimal/default: report status and proposed commands; wait for approval.
+   git status
+
+   # Team-maintainer opt-in only, unless current instructions forbid it:
+   git pull --rebase
+   bd dolt push
+   git push
+   git status
+   ```
+5. **Hand off** - Summarize changes, validation, issue status, and any blocked sync/commit/push step
+
+**Critical rules:**
+- Explicit user or orchestrator instructions override this Beads block.
+- Do not commit or push without clear authority from the active profile or the current user request.
+- If a required sync or push is blocked, stop and report the exact command and error.
+<!-- END BEADS INTEGRATION -->
+<!-- markdownlint-enable MD013 MD022 MD025 MD031 MD032 MD034 -->
+
+## Beads: Data Safety and Workflow Rules
+
+### Export after every mutation (bd v1.0.4)
+
+<!-- bd-version: 1.0.4 -->
+
+On bd v1.0.4 every command prints `auto-importing N bytes ... into empty
+database` and rehydrates the working DB from `.beads/issues.jsonl`. A mutation
+not yet flushed to the JSONL file is **silently reverted** by the next
+command's re-import. Observed data loss: a `bd dep rm` rolled back before the
+next command saw it; a later `bd dep add` then reported a phantom cycle.
+
+**Mandatory workaround (bd 1.0.4 only):** export after **every** mutation —
+never bundle exports at the end of a response:
+
+```bash
+bd export --all -o .beads/issues.jsonl   # run after EACH bd mutation
+```
+
+Re-evaluate when a bd release fixes auto-import without the v1.0.5 regression.
+
+### Never commit `.beads/issues.jsonl`
+
+`.beads/issues.jsonl` is gitignored and MUST NOT be `git add`ed or committed,
+even though the export step above still writes it locally on every mutation.
+It regenerates on every single issue create/claim/close; committing it
+drowns real code changes in noise commits. bd's Dolt-backed sync
+(`refs/dolt/data`) is the actual cross-machine sync mechanism — this file is
+a local-only convenience export, redundant with it.
+
+### Suppress git-add warning
+
+If you see `auto-export: git add failed: exit status 1` after a bd mutation,
+the cause is `export.git-add=true` (default) trying to stage
+`.beads/issues.jsonl`, which is gitignored. Fix permanently:
+
+```yaml
+# .beads/config.yaml
+export:
+  git-add: false
+```
+
+This keeps local export (beads viewer stays in sync) while disabling git
+staging.
+
+### Never run `bd list --all`
+
+**NEVER run `bd list --all`** — at ~350 issues it enters an unbounded output
+loop (5.6 GB, 100% CPU, SIGKILL, nearly fills the 17 GB agent disk). For bulk
+reads, query `.beads/issues.jsonl` directly with `grep`/`jq`. For live queries
+use only scoped commands: `bd ready`, `bd list --status <s>`,
+`bd list --priority <p>`, `bd show <id>`. If unavoidable, bound it:
+`timeout 20 bd list --all`. (Bug tracked: 1fg7)
+
+### Findings are always tied to WIP
+
+A finding discovered during implementation must be filed as an issue and
+connected to the active WIP (`in_progress` issue or current branch). A finding
+not tied to active WIP must be converted to a normal feature request: its
+headline must **not** contain the word "Finding", though the description may
+note provenance.
+
+### Findings gates are closed by humans only
+
+**AI agents MUST NOT close a findings gate.** A findings gate is a human
+review checkpoint — it signals that a set of findings has been collected and
+is awaiting human sign-off. Only the human reviewer closes it after confirming
+each child finding has been addressed. This applies regardless of how many
+child tasks have been closed.
+
+## Beads: Issue Types and Dependency Rules
+
+### Issue Types
+
+Built-in types and when to use each:
+
+| Type        | Use when                                              |
+|-------------|-------------------------------------------------------|
+| `task`      | Default. General work item. (default when omitted)    |
+| `bug`       | Something broken that must be fixed.                  |
+| `feature`   | New user-facing capability.                           |
+| `chore`     | Maintenance, cleanup, non-functional work.            |
+| `epic`      | Large body of work grouping child issues.             |
+| `spike`     | Timeboxed investigation to reduce uncertainty.        |
+| `story`     | User story (user-centric feature description).        |
+| `decision`  | Architectural or design decision to document.         |
+| `milestone` | Marks completion of a set of related issues.          |
+| `gate`      | Async coordination checkpoint (blocks until cleared). |
+| `molecule`  | Beads work template — NOT Ansible Molecule testing.   |
+
+### Attaching Issues to Epics (epics cannot be gated)
+
+`bd dep add` connects **any pair of issue types except `epic`** — an epic
+connects only to another epic. So an epic cannot be gated out of `bd ready`
+by its non-epic children:
+
+- `bd dep add` between an epic and a non-epic is rejected in **both**
+  directions (`<epic> <non-epic>` and `<non-epic> <epic>`), each printing
+  `Error: epics can only block other epics, not tasks` (the message always
+  says "not tasks", whatever the real type). A non-epic therefore cannot block
+  its epic. Epic↔epic edges ARE permitted; non-epic pairs gate normally (a
+  task can block a task, a feature, etc.).
+- `--parent` attaches a child for display/scope only. It does NOT gate
+  readiness and does NOT exclude the parent from `bd ready`.
+
+```shell
+bd update <child-id> --parent <epic-id>
+```
+
+An epic with open children therefore REMAINS in `bd ready`. Do not rely on
+`bd ready` exclusion to track epic scope — read the epic's CHILDREN section
+via `bd show <epic-id>` instead. See
+[triage.md](docs/architecture/concepts/issue-tracking/triage.md) for the
+validated dep-add type matrix and `--parent` / `bd ready` semantics
+(bd v1.0.4).
+
+### Beads Dependency Wiring — Cross-Tree Follow-Ups
+
+Operationalizes Principle VIII (cross-tree blocking). When a policy or review
+decision constrains in-flight work in another tree, wire the blocking dep
+**immediately** — but mind the type rule: `bd dep add` cannot make an `epic`
+block a non-epic (rejected; see "Attaching Issues to Epics" above). If the
+follow-up is tracked as an epic, use a **non-epic** issue as the actual
+blocker — a concrete task under that epic, or a `gate` checkpoint (verified:
+a `gate` blocks a non-epic and gates it out of `bd ready`). Wire it as
+`bd dep add <in-flight-issue> <non-epic-blocker>` (in-flight depends on
+blocker).
+
+**Signal the next action for the next session**: after wiring the deps, claim
+both the blocked issue and the immediate actionable follow-up:
+
+```bash
+bd update <blocked-issue> --claim   # signals "this goal is in flight"
+bd update <follow-up> --claim       # signals "work on this next"
+```
+
+Without claiming, triage ranks by graph score. A high-impact unrelated issue
+will outrank the follow-up you actually need to work on, causing the next
+session to pick up the wrong work.
+
+## Collaboration with the User
+
+- **Language**: English throughout. Apply the caveman skill by audience —
+  `caveman full` for user-facing content (chat, code, comments, documentation,
+  beads issues); `caveman wenyan-ultra` for internal and inter-agent content
+  (thinking, subagents, MCP, tool calls, all files under `.omc/`). Code blocks,
+  commit messages, and security warnings stay in normal English regardless of
+  mode. The skills define each mode.
+- **One question at a time**: when asking the user a question, ask one
+  question at a time so they can focus.
+- **Avoid ambiguity**: if instructions are unclear, contradictory, or
+  conflict with rules or earlier instructions, describe the situation and
+  ask clarifying questions before proceeding.
+- **Hidden files**: the LS tool does not show hidden files; use
+  `ls -la <path>` via Bash to check for hidden files or directories.
 
 ---
 
@@ -40,6 +248,12 @@ Before starting any non-trivial feature/chore branch (new work, not a one-line f
 | Brevo            | getbrevo/brevo-node          |
 | next-themes      | pacocoursey/next-themes      |
 | Vercel           | vercel/vercel                |
+
+<!-- BEGIN:nextjs-agent-rules -->
+### This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
+<!-- END:nextjs-agent-rules -->
 
 ---
 
@@ -125,82 +339,4 @@ Use Tailwind CSS utility classes exclusively — no custom CSS files except `app
 
 Host on Vercel. Connect the GitHub repo (`eudicy/birthday-briefing`) in the Vercel dashboard — every push to `main` triggers an automatic production deployment. No `vercel.json` is needed for a standard Next.js App Router project; Vercel auto-detects the framework. Set `BREVO_API_KEY` and `BREVO_LIST_ID` as environment variables in the Vercel project settings (not in `.env.local`, which is local-only). Use Vercel's preview deployments for PRs.
 
-<!-- BEGIN BEADS INTEGRATION v:1 profile:minimal hash:970c3bf2 -->
-## Beads Issue Tracker
 
-This project uses **bd (beads)** for issue tracking. Run `bd prime` to see full workflow context and commands.
-
-### Quick Reference
-
-```bash
-bd ready              # Find available work
-bd show <id>          # View issue details
-bd update <id> --claim  # Claim work
-bd close <id>         # Complete work
-```
-
-### Rules
-
-- Use `bd` for ALL task tracking — do NOT use TodoWrite, TaskCreate, or markdown TODO lists
-- Run `bd prime` for detailed command reference and session close protocol
-- Use `bd remember` for persistent knowledge — do NOT use MEMORY.md files
-
-**Architecture in one line:** issues live in a local Dolt DB; sync uses `refs/dolt/data` on your git remote; `.beads/issues.jsonl` is a passive export. See https://github.com/gastownhall/beads/blob/main/docs/SYNC_CONCEPTS.md for details and anti-patterns.
-
-## Agent Context Profiles
-
-The managed Beads block is task-tracking guidance, not permission to override repository, user, or orchestrator instructions.
-
-- **Conservative (default)**: Use `bd` for task tracking. Do not run git commits, git pushes, or Dolt remote sync unless explicitly asked. At handoff, report changed files, validation, and suggested next commands.
-- **Minimal**: Keep tool instruction files as pointers to `bd prime`; use the same conservative git policy unless active instructions say otherwise.
-- **Team-maintainer**: Only when the repository explicitly opts in, agents may close beads, run quality gates, commit, and push as part of session close. A current "do not commit" or "do not push" instruction still wins.
-
-## Session Completion
-
-This protocol applies when ending a Beads implementation workflow. It is subordinate to explicit user, repository, and orchestrator instructions.
-
-1. **File issues for remaining work** - Create beads for anything that needs follow-up
-2. **Run quality gates** (if code changed) - Tests, linters, builds
-3. **Update issue status** - Close finished work, update in-progress items
-4. **Handle git/sync by active profile**:
-   ```bash
-   # Conservative/minimal/default: report status and proposed commands; wait for approval.
-   git status
-
-   # Team-maintainer opt-in only, unless current instructions forbid it:
-   git pull --rebase
-   bd dolt push
-   git push
-   git status
-   ```
-5. **Hand off** - Summarize changes, validation, issue status, and any blocked sync/commit/push step
-
-**Critical rules:**
-- Explicit user or orchestrator instructions override this Beads block.
-- Do not commit or push without clear authority from the active profile or the current user request.
-- If a required sync or push is blocked, stop and report the exact command and error.
-<!-- END BEADS INTEGRATION -->
-
-<!-- BEGIN BEADS CODEX SETUP: generated by bd setup codex -->
-## Beads Issue Tracker
-
-Use Beads (`bd`) for durable task tracking in repositories that include it. Use the `beads` skill at `.agents/skills/beads/SKILL.md` (project install) or `~/.agents/skills/beads/SKILL.md` (global install) for Beads workflow guidance, then use the `bd` CLI for issue operations.
-
-### Quick Reference
-
-```bash
-bd ready                # Find available work
-bd show <id>            # View issue details
-bd update <id> --claim  # Claim work
-bd close <id>           # Complete work
-bd prime                # Refresh Beads context
-```
-
-### Rules
-
-- Use `bd` for all task tracking; do not create markdown TODO lists.
-- Run `bd prime` when Beads context is missing or stale. Codex 0.129.0+ can load Beads context automatically through native hooks; use `/hooks` to inspect or toggle them.
-- Keep persistent project memory in Beads via `bd remember`; do not create ad hoc memory files.
-
-**Architecture in one line:** issues live in a local Dolt DB; sync uses `refs/dolt/data` on your git remote; `.beads/issues.jsonl` is a passive export. See https://github.com/gastownhall/beads/blob/main/docs/SYNC_CONCEPTS.md for details and anti-patterns.
-<!-- END BEADS CODEX SETUP -->
