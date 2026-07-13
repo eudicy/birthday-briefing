@@ -7,7 +7,7 @@ describe("ImprintPage", () => {
     render(<ImprintPage />);
 
     expect(
-      screen.getByRole("heading", { level: 1, name: "Imprint (Impressum)" }),
+      screen.getByRole("heading", { level: 1, name: "Imprint" }),
     ).toBeInTheDocument();
   });
 
@@ -16,14 +16,21 @@ describe("ImprintPage", () => {
 
     const h2s = screen.getAllByRole("heading", { level: 2 });
     expect(h2s).toHaveLength(2);
-    expect(h2s[0]).toHaveTextContent("Information pursuant to § 5 TMG (Angaben gemäß § 5 TMG)");
-    expect(h2s[1]).toHaveTextContent("Contact (Kontakt)");
+    expect(h2s[0]).toHaveTextContent("Information pursuant to § 5 TMG");
+    expect(h2s[1]).toHaveTextContent("Contact");
 
     const h3s = screen.getAllByRole("heading", { level: 3 });
     expect(h3s).toHaveLength(3);
-    expect(h3s[0]).toHaveTextContent("Liability for Content (Haftung für Inhalte)");
-    expect(h3s[1]).toHaveTextContent("Liability for Links (Haftung für Links)");
-    expect(h3s[2]).toHaveTextContent("Copyright (Urheberrecht)");
+    expect(h3s[0]).toHaveTextContent("Liability for Content");
+    expect(h3s[1]).toHaveTextContent("Liability for Links");
+    expect(h3s[2]).toHaveTextContent("Copyright");
+  });
+
+  it("renders a link back to home", () => {
+    render(<ImprintPage />);
+
+    const backLink = screen.getByRole("link", { name: /back to home/i });
+    expect(backLink).toHaveAttribute("href", "/");
   });
 
   it("renders the operator block and contact email", () => {

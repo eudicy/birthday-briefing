@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Footer } from "@/components/Footer";
 
 export default function ImprintPage() {
@@ -5,11 +6,18 @@ export default function ImprintPage() {
     <div className="flex flex-col flex-1">
       <main className="flex-1">
         <div className="max-w-4xl mx-auto px-4 py-16 space-y-10">
-          <h1 className="text-3xl font-bold">Imprint (Impressum)</h1>
+          <Link
+            href="/"
+            className="inline-block text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            ← Back to home
+          </Link>
+
+          <h1 className="text-3xl font-bold">Imprint</h1>
 
           <section className="space-y-4">
             <h2 className="text-xl font-semibold">
-              Information pursuant to § 5 TMG (Angaben gemäß § 5 TMG)
+              Information pursuant to § 5 TMG
             </h2>
             <p>
               Stefan Boos
@@ -21,21 +29,19 @@ export default function ImprintPage() {
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-semibold">Contact (Kontakt)</h2>
+            <h2 className="text-xl font-semibold">Contact</h2>
             <p>Email: webmaster@boos.systems</p>
           </section>
 
           <section className="space-y-4">
-            <h3 className="text-lg font-semibold">
-              Liability for Content (Haftung für Inhalte)
-            </h3>
+            <h3 className="text-lg font-semibold">Liability for Content</h3>
             <p>
-              As a service provider (Diensteanbieter), we are responsible for our
-              own content on these pages under general law in accordance with §
-              7 (1) TMG (Telemediengesetz). However, pursuant to §§ 8 to 10 TMG,
-              we as a service provider are not obligated to monitor transmitted
-              or stored third-party information, or to investigate circumstances
-              that indicate illegal activity.
+              As a service provider, we are responsible for our own content on
+              these pages under general law in accordance with § 7 (1) TMG.
+              However, pursuant to §§ 8 to 10 TMG, we as a service provider
+              are not obligated to monitor transmitted or stored third-party
+              information, or to investigate circumstances that indicate
+              illegal activity.
             </p>
             <p>
               Obligations to remove or block the use of information under
@@ -47,9 +53,7 @@ export default function ImprintPage() {
           </section>
 
           <section className="space-y-4">
-            <h3 className="text-lg font-semibold">
-              Liability for Links (Haftung für Links)
-            </h3>
+            <h3 className="text-lg font-semibold">Liability for Links</h3>
             <p>
               Our offering contains links to external third-party websites over
               whose content we have no influence. We therefore cannot assume any
@@ -68,14 +72,14 @@ export default function ImprintPage() {
           </section>
 
           <section className="space-y-4">
-            <h3 className="text-lg font-semibold">Copyright (Urheberrecht)</h3>
+            <h3 className="text-lg font-semibold">Copyright</h3>
             <p>
               The content and works on these pages created by the site
-              operators are subject to German copyright law (Urheberrecht).
-              Reproduction, editing, distribution, and any kind of use outside
-              the limits of copyright require the written consent of the
-              respective author or creator. Downloads and copies of this page
-              are permitted only for private, non-commercial use.
+              operators are subject to German copyright law. Reproduction,
+              editing, distribution, and any kind of use outside the limits of
+              copyright require the written consent of the respective author
+              or creator. Downloads and copies of this page are permitted
+              only for private, non-commercial use.
             </p>
             <p>
               Insofar as the content on this page was not created by the
@@ -86,7 +90,7 @@ export default function ImprintPage() {
               will remove such content immediately.
             </p>
             <p>
-              Source (Quelle):{" "}
+              Source:{" "}
               <a
                 href="https://www.e-recht24.de"
                 target="_blank"
