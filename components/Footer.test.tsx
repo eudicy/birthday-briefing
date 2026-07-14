@@ -15,5 +15,8 @@ describe("Footer", () => {
 
     const imprint = screen.getByRole("link", { name: /imprint/i });
     expect(imprint).toHaveAttribute("href", "/imprint");
+
+    const designStudy = screen.getByRole("link", { name: /view design study/i });
+    expect(designStudy).toHaveAttribute("href", "/design-study");
   });
 });
