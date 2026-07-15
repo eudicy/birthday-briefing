@@ -18,12 +18,15 @@ export default function DesignStudyTodayPage() {
 
               <div className="flex flex-col items-center space-y-4 text-center">
                 <div className="flex h-24 w-24 items-center justify-center rounded-full bg-primary text-2xl font-semibold text-primary-foreground">
-                  AK
+                  PC
                 </div>
-                <h1 className="text-xl font-bold">Anna Keller</h1>
+                <h1 className="text-xl font-bold">Placeholder Contact</h1>
                 <span className="inline-flex items-center rounded-full bg-muted px-3 py-1 text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-                  🎉 Today
+                  🎉 Example Birthday
                 </span>
+                <p className="text-xs text-muted-foreground">
+                  Mock screen — same for every contact, no live data yet.
+                </p>
               </div>
 
               <div className="flex items-center gap-3">

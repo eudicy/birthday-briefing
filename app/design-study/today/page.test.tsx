@@ -4,22 +4,28 @@ import DesignStudyTodayPage from "./page";
 import DesignStudyPage from "../page";
 
 describe("DesignStudyTodayPage", () => {
-  it("renders the name Anna Keller", () => {
+  it("renders a placeholder name, not a real contact", () => {
     render(<DesignStudyTodayPage />);
 
-    expect(screen.getByText("Anna Keller")).toBeInTheDocument();
+    expect(screen.getByText("Placeholder Contact")).toBeInTheDocument();
   });
 
-  it("renders avatar initials AK", () => {
+  it("renders placeholder avatar initials PC", () => {
     render(<DesignStudyTodayPage />);
 
-    expect(screen.getByText("AK")).toBeInTheDocument();
+    expect(screen.getByText("PC")).toBeInTheDocument();
   });
 
-  it("renders a Today badge", () => {
+  it("renders an example-birthday badge", () => {
     render(<DesignStudyTodayPage />);
 
-    expect(screen.getByText(/today/i)).toBeInTheDocument();
+    expect(screen.getByText(/example birthday/i)).toBeInTheDocument();
+  });
+
+  it("renders a mock disclaimer noting the screen has no live data", () => {
+    render(<DesignStudyTodayPage />);
+
+    expect(screen.getByText(/no live data/i)).toBeInTheDocument();
   });
 
   it("renders a Call button", () => {
