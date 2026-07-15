@@ -47,12 +47,18 @@ export default function DesignStudyPage() {
                       {group.entries.map((entry) => (
                         <li
                           key={`${entry.name}-${entry.date}`}
-                          className="flex items-center justify-between rounded-lg bg-muted/50 px-3 py-2"
+                          className="rounded-lg bg-muted/50 hover:bg-muted transition-colors"
                         >
-                          <span className="font-medium">{entry.name}</span>
-                          <span className="text-sm text-muted-foreground">
-                            {entry.date}
-                          </span>
+                          <Link
+                            href="/design-study/today"
+                            className="flex items-center justify-between rounded-lg px-3 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                          >
+                            <span className="font-medium">{entry.name}</span>
+                            <span className="flex items-center gap-2 text-sm text-muted-foreground">
+                              {entry.date}
+                              <span aria-hidden="true">&rsaquo;</span>
+                            </span>
+                          </Link>
                         </li>
                       ))}
                     </ul>

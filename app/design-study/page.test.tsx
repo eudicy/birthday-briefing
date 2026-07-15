@@ -39,4 +39,22 @@ describe("DesignStudyPage", () => {
     const backLink = screen.getByRole("link", { name: /back to home/i });
     expect(backLink).toHaveAttribute("href", "/");
   });
+
+  it("wires every contact row across all groups to /design-study/today", () => {
+    render(<DesignStudyPage />);
+
+    const names = [
+      "Anna Keller",
+      "Markus Lehner",
+      "Sophie Braun",
+      "Jonas Weber",
+      "Lea Fischer",
+      "Mia Hoffmann",
+    ];
+
+    for (const name of names) {
+      const rowLink = screen.getByRole("link", { name: new RegExp(name, "i") });
+      expect(rowLink).toHaveAttribute("href", "/design-study/today");
+    }
+  });
 });
