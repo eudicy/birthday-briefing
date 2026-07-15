@@ -57,9 +57,7 @@ export default function DesignStudyPage() {
                               <span className="font-medium">{entry.name}</span>
                               <span className="flex items-center gap-2 text-sm text-muted-foreground">
                                 {entry.date}
-                                <span className="text-muted-foreground">
-                                  &rsaquo;
-                                </span>
+                                <span>&rsaquo;</span>
                               </span>
                             </Link>
                           </li>
