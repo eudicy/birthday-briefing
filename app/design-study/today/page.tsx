@@ -22,7 +22,7 @@ export default function DesignStudyTodayPage() {
                 </div>
                 <h1 className="text-xl font-bold">Placeholder Contact</h1>
                 <span className="inline-flex items-center rounded-full bg-muted px-3 py-1 text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-                  🎉 Example Birthday
+                  🎉 Today
                 </span>
                 <p className="text-xs text-muted-foreground">
                   Mock screen — same for every contact, no live data yet.

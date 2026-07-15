@@ -16,10 +16,10 @@ describe("DesignStudyTodayPage", () => {
     expect(screen.getByText("PC")).toBeInTheDocument();
   });
 
-  it("renders an example-birthday badge", () => {
+  it("renders a Today badge", () => {
     render(<DesignStudyTodayPage />);
 
-    expect(screen.getByText(/example birthday/i)).toBeInTheDocument();
+    expect(screen.getByText(/today/i)).toBeInTheDocument();
   });
 
   it("renders a mock disclaimer noting the screen has no live data", () => {
