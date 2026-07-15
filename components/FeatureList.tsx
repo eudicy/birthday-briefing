@@ -12,10 +12,10 @@ const features = [
       "Sends timely reminders with enough lead time to act — the right nudge at the right time.",
   },
   {
-    icon: "🎯",
-    title: "No missed moments",
+    icon: "📞",
+    title: "Reach out in one tap",
     description:
-      "Friends, family, and partner — every important date tracked, so nothing slips through.",
+      "When it's someone's birthday, jump straight to calling or messaging them — no digging for their number.",
   },
 ];
 
