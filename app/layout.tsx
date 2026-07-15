@@ -17,11 +17,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Birthday Briefing — Never Miss a Birthday Again",
   description:
-    "Birthday Briefing consolidates every birthday scattered across your contacts and apps, then sends timely reminders with enough lead time to act.",
+    "Birthday Briefing consolidates every birthday scattered across your contacts and apps, then sends timely reminders with enough lead time to act — and when the day arrives, reach out in one tap.",
   openGraph: {
     title: "Birthday Briefing — Never Miss a Birthday Again",
     description:
-      "Automatic birthday reminders with enough lead time to act. No manual syncing, no missed moments.",
+      "Automatic birthday reminders with enough lead time to act, no manual syncing — then reach out in one tap.",
     type: "website",
   },
 };

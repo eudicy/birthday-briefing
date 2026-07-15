@@ -13,7 +13,7 @@ export function HeroSection() {
       <p className="mt-6 text-lg text-muted-foreground sm:text-xl max-w-2xl mx-auto">
         Birthday Briefing consolidates every birthday scattered across your
         contacts and apps, then sends timely reminders with enough lead time
-        to act.
+        to act — and when the day arrives, reach out in one tap.
       </p>
       <div className="mt-8">
         <a
