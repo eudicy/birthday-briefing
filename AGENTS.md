@@ -224,7 +224,7 @@ See [`README.md`](README.md) for the product description, target audience, and p
 
 ## Scope
 
-Current phase: landing page plus a legally-required `/imprint` route — two routes total: email waitlist signup for the upcoming app announcement, and the Impressum. No Flutter app code lives in this repo. App development (iOS/Android/Web) starts after this landing page ships and is live on Vercel. Don't scaffold app-related code here unless explicitly asked.
+Current phase: landing page plus a legally-required `/imprint` route, plus a `/design-study` wireframe gallery (and its nested `/design-study/today` action screen) — four routes total: email waitlist signup for the upcoming app announcement, the Impressum, and Next.js/React design-study mockups for demoing planned app value moments. No Flutter app code lives in this repo. App development (iOS/Android/Web) starts after this landing page ships and is live on Vercel. Don't scaffold app-related code here unless explicitly asked.
 
 ---
 
@@ -265,6 +265,10 @@ app/
   page.tsx            # landing page
   imprint/
     page.tsx          # /imprint route — legally required Impressum
+  design-study/
+    page.tsx          # /design-study route — upcoming-birthdays wireframe mockup
+    today/
+      page.tsx        # /design-study/today route — today's-birthday action wireframe
   actions/
     subscribe.ts      # server action: submit email to Brevo
 components/
@@ -286,7 +290,7 @@ Keep all components in `components/`. Server actions live in `app/actions/`. No 
 
 ## Routing (App Router)
 
-This is primarily a single-page marketing site with one additional static route for legal compliance: `app/page.tsx` (landing page) and `app/imprint/page.tsx` (Impressum). The root layout (`app/layout.tsx`) sets global metadata, fonts (next/font), and wraps children. Each route duplicates its own page shell (`<main>` + `<Footer/>`) rather than hoisting it into the layout — see the imprint page's ADR for the rule-of-three follow-up. All page-level components are React Server Components by default. Only add `"use client"` to components that need interactivity (e.g. `SignupForm`). No dynamic routes needed for this increment.
+This is primarily a single-page marketing site with four routes total: `app/page.tsx` (landing page), `app/imprint/page.tsx` (Impressum, legal compliance), `app/design-study/page.tsx` (upcoming-birthdays wireframe mockup), and `app/design-study/today/page.tsx` (nested today's-birthday action wireframe, reached from the `/design-study` screen). The root layout (`app/layout.tsx`) sets global metadata, fonts (next/font), and wraps children. Each route duplicates its own page shell (`<main>` + `<Footer/>`) rather than hoisting it into the layout — see the imprint page's ADR for the rule-of-three follow-up. All page-level components are React Server Components by default. Only add `"use client"` to components that need interactivity (e.g. `SignupForm`). No dynamic routes needed for this increment.
 
 ---
 

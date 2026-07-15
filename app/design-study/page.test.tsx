@@ -39,4 +39,11 @@ describe("DesignStudyPage", () => {
     const backLink = screen.getByRole("link", { name: /back to home/i });
     expect(backLink).toHaveAttribute("href", "/");
   });
+
+  it("wires the Anna Keller row to /design-study/today", () => {
+    render(<DesignStudyPage />);
+
+    const rowLink = screen.getByRole("link", { name: /anna keller/i });
+    expect(rowLink).toHaveAttribute("href", "/design-study/today");
+  });
 });
