@@ -44,35 +44,23 @@ export default function DesignStudyPage() {
                       {group.label}
                     </h2>
                     <ul className="space-y-1">
-                      {group.entries.map((entry) =>
-                        group.label === "Today" ? (
-                          <li
-                            key={`${entry.name}-${entry.date}`}
-                            className="group rounded-lg bg-muted/50 hover:bg-muted transition-colors"
-                          >
-                            <Link
-                              href="/design-study/today"
-                              className="flex items-center justify-between px-3 py-2"
-                            >
-                              <span className="font-medium">{entry.name}</span>
-                              <span className="flex items-center gap-2 text-sm text-muted-foreground">
-                                {entry.date}
-                                <span>&rsaquo;</span>
-                              </span>
-                            </Link>
-                          </li>
-                        ) : (
-                          <li
-                            key={`${entry.name}-${entry.date}`}
-                            className="flex items-center justify-between rounded-lg bg-muted/50 px-3 py-2"
+                      {group.entries.map((entry) => (
+                        <li
+                          key={`${entry.name}-${entry.date}`}
+                          className="rounded-lg bg-muted/50 hover:bg-muted transition-colors"
+                        >
+                          <Link
+                            href="/design-study/today"
+                            className="flex items-center justify-between rounded-lg px-3 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                           >
                             <span className="font-medium">{entry.name}</span>
-                            <span className="text-sm text-muted-foreground">
+                            <span className="flex items-center gap-2 text-sm text-muted-foreground">
                               {entry.date}
+                              <span aria-hidden="true">&rsaquo;</span>
                             </span>
-                          </li>
-                        )
-                      )}
+                          </Link>
+                        </li>
+                      ))}
                     </ul>
                   </section>
                 ))}

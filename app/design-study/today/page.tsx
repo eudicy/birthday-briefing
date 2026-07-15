@@ -6,15 +6,16 @@ export default function DesignStudyTodayPage() {
     <div className="flex flex-col flex-1">
       <main className="flex-1">
         <div className="max-w-4xl mx-auto px-4 py-16 space-y-10">
-          <Link
-            href="/design-study"
-            className="inline-block text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            ← Back to Upcoming Birthdays
-          </Link>
-
           <div className="mx-auto w-full max-w-[380px] rounded-[2.5rem] border-8 border-foreground/10 bg-card p-3 shadow-xl">
             <div className="rounded-[1.75rem] bg-background p-6 space-y-6">
+              <Link
+                href="/design-study"
+                className="inline-flex items-center gap-1 rounded-md text-sm text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <span aria-hidden="true">&lsaquo;</span>
+                Back to Upcoming Birthdays
+              </Link>
+
               <div className="flex flex-col items-center space-y-4 text-center">
                 <div className="flex h-24 w-24 items-center justify-center rounded-full bg-primary text-2xl font-semibold text-primary-foreground">
                   AK
